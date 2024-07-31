@@ -34,6 +34,7 @@ public class SecurityConfig {
         RequestMatcher swaggerUI = new AntPathRequestMatcher("/swagger-ui/**");
         RequestMatcher apiDocs = new AntPathRequestMatcher("/v3/api-docs/**");
         RequestMatcher swaggerUiHtml = new AntPathRequestMatcher("/swagger-ui.html");
+        RequestMatcher skills = new AntPathRequestMatcher("/skills/**");
         RequestMatcher publicEndpoints = new AntPathRequestMatcher("/auth/**");
         RequestMatcher adminEndpoints = new AntPathRequestMatcher("/admin/**");
         RequestMatcher userEndpoints = new AntPathRequestMatcher("/user/**");
@@ -42,14 +43,10 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(swaggerUI).permitAll()
-                        .requestMatchers(apiDocs).permitAll()
-                        .requestMatchers(swaggerUiHtml).permitAll()
-                        .requestMatchers(publicEndpoints).permitAll()
                         .requestMatchers(adminEndpoints).hasAnyAuthority("ADMIN")
                         .requestMatchers(userEndpoints).hasAnyAuthority("USER")
-                        .requestMatchers(adminUserEndpoints).hasAnyAuthority("USER", "ADMIN")
-                        .anyRequest().authenticated())
+                        .requestMatchers(skills).hasAnyAuthority("USER", "ADMIN")
+                        .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

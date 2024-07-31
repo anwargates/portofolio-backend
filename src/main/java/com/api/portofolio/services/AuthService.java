@@ -106,7 +106,7 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<GenericResponse> signIn(LoginReq loginReq) {
+    public GenericResponse signIn(LoginReq loginReq) {
         GenericResponse resp = new GenericResponse();
         try {
             var user = portoUserRepository.findByEmail(loginReq.getEmail()).orElseThrow(
@@ -134,22 +134,15 @@ public class AuthService {
 //                    user.getEmail(),
 //                    "SIGN IN SUCCESS"
 //            );
-            return ResponseEntity.ok().body(resp);
+            return resp;
         } catch (BadCredentialsException e) {
             resp.setMessage("Wrong Password");
             resp.setStatusCode(HttpStatus.UNAUTHORIZED.value());
-
-            // record activity
-//            logActivityService.recordActivity(
-//                    loginReq.getEmail(),
-//                    "SIGN IN FAILED"
-//            );
-            return ResponseEntity.internalServerError().body(resp);
+            return resp;
         } catch (UsernameNotFoundException e) {
             resp.setMessage("Email not found");
             resp.setStatusCode(HttpStatus.NOT_FOUND.value());
-
-            return ResponseEntity.internalServerError().body(resp);
+            return resp;
         }
     }
 

@@ -36,7 +36,6 @@ public class AuthController {
     })
     @PostMapping("/signup")
     public ResponseEntity<GenericResponse> signUp(
-            @Parameter(description = "User object to be created", required = true)
             @Valid
             @RequestBody RegisterReq registerReq) {
         GenericResponse genericResponse = authService.signUp(registerReq);
@@ -58,7 +57,8 @@ public class AuthController {
     public ResponseEntity<GenericResponse> signIn(
             @Valid
             @RequestBody LoginReq loginReq) {
-        return authService.signIn(loginReq);
+        GenericResponse genericResponse = authService.signIn(loginReq);
+        return ResponseEntity.status(genericResponse.getStatusCode()).body(genericResponse);
     }
 
 //    @PostMapping("/refresh")
